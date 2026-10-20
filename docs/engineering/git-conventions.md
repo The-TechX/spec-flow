@@ -1,6 +1,6 @@
 # Git Conventions
 
-Recommended, project-agnostic conventions for readable Git history and reviewable changes. Repository-specific policies, tooling, and explicit project instructions take precedence. Examples and formats below are defaults, not exhaustive vocabularies or mandatory wording.
+Recommended, project-agnostic conventions for readable Git history and reviewable changes. Repository-specific policies, tooling, and explicit project instructions take precedence. Examples and formats below are defaults, not exhaustive vocabularies. English is the default language for Git metadata; repository-specific policies take precedence.
 
 ## Principles
 
@@ -31,7 +31,7 @@ Conventional Commits is a useful default where the project has no established fo
 
 Common types include `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, and `revert`. This is illustrative, not an allowed-type whitelist.
 
-- Choose natural language, tense, and verbs that best communicate the change, unless project tooling requires a specific style.
+- Write commit messages in English. Choose clear, natural verbs and phrasing; no fixed verb vocabulary is required.
 - Prefer a concise subject; add a body when rationale, constraints, or consequences are not obvious.
 - Use a scope when it adds useful context; do not invent one solely to satisfy a template.
 - Describe breaking changes explicitly and follow the project's release conventions.
@@ -41,34 +41,38 @@ Common types include `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `build`,
 
 ## Pull requests
 
-A PR title should summarize the delivered outcome. Reusing the project's commit convention is a reasonable default, not a requirement.
+A PR title should summarize the delivered outcome in English. Using the project's commit convention is a reasonable default.
 
-A PR description should communicate the relevant information without duplicating other authoritative artifacts. Adapt or omit sections that do not apply:
+### Minimum PR description
+
+Every PR should use these three sections, in this order. Keep them concise, but do not omit them:
 
 ```markdown
 ## Summary
 What changed and why.
 
 ## Changes
-Notable behavior, integration, and intentional non-changes.
-
-## References
-Relevant issue, specification, tasks, plan, design, or implementation links, if available.
+- Key modifications and relevant behavior.
 
 ## Validation
-Checks performed and their actual results; identify checks not run.
-
-## Findings / Limitations
-Open issues, uncertainties, environmental constraints, or follow-up work.
-
-## Impact
-Breaking changes, data/schema changes, dependencies, configuration, or operational impact, if relevant.
-
-## Review Notes
-Areas that warrant attention, if any.
+- Check or review performed: PASS / FAIL / NOT RUN, with evidence when relevant.
+- Explicitly identify meaningful checks that were not executed.
 ```
 
-A code-path review is not a manual test. Do not label an issue preexisting without supporting comparison. Use links rather than reproducing large specifications.
+### Conditional sections
+
+Add the following sections only when their information is relevant:
+
+- `## References` — issue, specification, tasks, plan, design, or implementation links.
+- `## Findings / Limitations` — unresolved issues, uncertainties, environment constraints, or follow-up work.
+- `## Impact` — breaking changes, schema/data changes, dependencies, configuration, migration, or operational impact.
+- `## Review Notes` — areas requiring special reviewer attention.
+
+### Additional sections
+
+Agents may add other sections when the change warrants them (for example, `## Migration`, `## Rollback`, or `## Screenshots`). Use the same `## Title` Markdown heading level and concise, evidence-based content as the standard sections. Avoid redundant or empty sections. Keep the three minimum sections in their defined order; place conditional or custom sections where they best support review.
+
+A code-path review is not an executed manual test. Do not label an issue preexisting without supporting comparison. Link to authoritative artifacts rather than duplicating large specifications. PR creation and verification status remain subject to project approval gates.
 
 ## Agent workflow and authority
 
