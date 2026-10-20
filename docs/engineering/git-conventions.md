@@ -1,85 +1,85 @@
 # Git Conventions
 
-This guideline defines repository history and delivery metadata for Spec Flow. It does not replace `spec`, `tasks`, `schedule`, or `verify` authority.
+Recommended, project-agnostic conventions for readable Git history and reviewable changes. Repository-specific policies, tooling, and explicit project instructions take precedence. Examples and formats below are defaults, not exhaustive vocabularies or mandatory wording.
 
-## Branches
+## Principles
 
-Format: `<type>/<short-kebab-case-description>`; optionally `<type>/<issue-id>-<description>`.
+- Prefer clear, concise descriptions of the outcome and intent over rigid wording.
+- Preserve traceability from a change to its relevant requirements, implementation, and validation when those artifacts exist.
+- Record what was actually checked; distinguish automated results, manual execution, and code inspection.
+- Respect the project's branching, review, security, and release policies.
 
-Allowed types: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `build`, `ci`, `chore`.
+## Branch names
 
-Branches describe the change, not the agent, Work Unit, session, or execution phase. Follow repository-specific branch protection and base-branch rules.
+Suggested pattern: `<category>/<short-description>`, optionally including a tracking identifier.
 
-## Commits
+Examples: `feat/onboarding-card`, `fix/upload-timeout`, `docs/git-guidelines`.
 
-Use Conventional Commits:
+Choose a category that communicates intent. Common categories include `feat`, `fix`, `docs`, `refactor`, and `chore`, but other names are valid. Prefer describing the work rather than the agent, session, or execution unit. Existing repository conventions take precedence.
+
+## Commit messages
+
+Conventional Commits is a useful default where the project has no established format:
 
 ```text
-<type>(<scope>): <imperative summary>
+<type>[(optional-scope)]: <summary>
 
-[optional body explaining why and relevant constraints]
+[optional context and rationale]
 
 [optional footers]
 ```
 
-Types: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `build`, `ci`, `chore`, `revert`.
+Common types include `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, and `revert`. This is illustrative, not an allowed-type whitelist.
 
-- Use lowercase types, a stable module-level scope when meaningful, and an English imperative summary without a trailing period.
-- Prefer a concise subject (ideally <=72 characters). Put reasoning, migration notes, and limitations in the body.
-- Mark breaking changes using `!` and a `BREAKING CHANGE:` footer when applicable.
-- Each commit must be coherent and reviewable; neither one commit per Task nor one commit per Work Unit is required.
-- Commit only within the approved scope and after the Work Unit's required gates pass. Stage explicit paths; never include unrelated changes.
-- Do not rewrite published history unless explicitly authorized.
+- Choose natural language, tense, and verbs that best communicate the change, unless project tooling requires a specific style.
+- Prefer a concise subject; add a body when rationale, constraints, or consequences are not obvious.
+- Use a scope when it adds useful context; do not invent one solely to satisfy a template.
+- Describe breaking changes explicitly and follow the project's release conventions.
+- Group commits by coherent, reviewable changes. Tasks, execution units, and commits need not map one-to-one.
+- Stage only intended files and honor required checks and commit boundaries.
+- Do not rewrite shared history without authorization.
 
 ## Pull requests
 
-PR title: `<type>(<scope>): <outcome-oriented summary>`, using the same type and scope conventions as commits. Describe the delivered change, not Task IDs or agent activity.
+A PR title should summarize the delivered outcome. Reusing the project's commit convention is a reasonable default, not a requirement.
 
-A PR represents a reviewable change, not necessarily one Work Unit. Its description must provide:
+A PR description should communicate the relevant information without duplicating other authoritative artifacts. Adapt or omit sections that do not apply:
 
 ```markdown
 ## Summary
 What changed and why.
 
 ## Changes
-- Key behavior and integration changes.
-- Relevant behavior intentionally preserved.
+Notable behavior, integration, and intentional non-changes.
 
-## Specification
-- Spec: <path or link, if applicable>
-- Tasks: <path or link, if applicable>
-- Plan: <path or link, if applicable>
-- Implementation: <commit SHA or range>
+## References
+Relevant issue, specification, tasks, plan, design, or implementation links, if available.
 
 ## Validation
-- Lint: PASS / FAIL / NOT RUN
-- Tests: PASS / FAIL / NOT RUN (include counts where useful)
-- Type-check: PASS / FAIL / NOT RUN
-- Build: PASS / FAIL / NOT RUN
-- Acceptance criteria: VERIFIED / PARTIAL / NOT VERIFIED
-- Manual checks: EXECUTED / NOT EXECUTED (specify coverage)
+Checks performed and their actual results; identify checks not run.
 
 ## Findings / Limitations
-Open issues, unverified cases, environment constraints, and baseline comparisons.
+Open issues, uncertainties, environmental constraints, or follow-up work.
 
 ## Impact
-Breaking changes, schema/data changes, dependencies, configuration, or "None".
+Breaking changes, data/schema changes, dependencies, configuration, or operational impact, if relevant.
 
 ## Review Notes
-Areas requiring focused review.
+Areas that warrant attention, if any.
 ```
 
-Use accurate evidence: a code trace is not an executed manual test. Do not claim an environmental failure is preexisting without a baseline comparison. Do not duplicate the full spec in the PR; link to its authoritative source.
+A code-path review is not a manual test. Do not label an issue preexisting without supporting comparison. Use links rather than reproducing large specifications.
 
-## Workflow and authority
+## Agent workflow and authority
 
-- `spec` owns requirements and acceptance criteria; `tasks` owns decomposition; `schedule` owns Work Units, sessions, dependencies, and commit boundaries.
-- Workers follow the approved plan and report validation evidence. They must not silently expand scope or fix unrelated defects.
-- `verify` owns the final assessment against the spec. A committed implementation, passing tests, or `PASS WITH FINDINGS` does not by itself mean verified or ready to merge.
-- When a missing or changed requirement is discovered, route it through change control and revalidate affected artifacts before implementing the new scope.
-- A failed mandatory gate blocks the corresponding commit or handoff unless the approved plan explicitly defines an alternative. Report failures rather than masking them.
-- Do not push, open a PR, merge, tag, or release without the authorization required by the current plan and repository policy.
+When a project uses structured phases, roles, or work plans, follow their documented ownership and approval gates. In Spec Flow, these are defined by `spec`, `tasks`, `schedule`, and `verify`; other projects may use different processes or none.
 
-## Automation
+- Follow the approved scope and report deviations instead of silently expanding work.
+- If requirements change or ambiguity materially affects implementation, request clarification or follow the project's change-control process.
+- A commit or passing automated checks does not independently establish that all acceptance criteria were verified.
+- Report failed required checks and respect any approved alternatives; do not conceal failures.
+- Push, PR creation, merge, tagging, and release follow the authority granted by the project and current instructions.
 
-Repositories may enforce commit messages with commitlint, PR titles with a title check, and required CI checks. These checks complement, but do not replace, review and the `verify` gate. Avoid requiring irrelevant PR fields for changes that do not use Spec Flow.
+## Optional automation
+
+Projects may use commitlint, PR title checks, templates, or CI gates when beneficial. Configure enforcement to match the project's conventions, not this document's examples. Automation supports review and verification; it does not replace them.
